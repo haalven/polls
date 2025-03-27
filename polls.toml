@@ -1,0 +1,16 @@
+csvurl  = "https://www.nytimes.com/newsgraphics/polls/approval/president.csv"
+
+selected_pollsters = ['American Research Group',
+                      'AtlasIntel',
+                      'Beacon Research/Shaw & Company Research',
+                      'CNN/SSRS',
+                      'Cygnal Political',
+                      'Emerson College',
+                      'Gallup',
+                      'Hart Research Associates/Public Opinion Strategies',
+                      'Ipsos',
+                      'Marist College',
+                      'Marquette Law School',
+                      'Public Opinion Strategies',
+                      'Pew Research Center',
+                      'Quinnipiac University']
