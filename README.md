@@ -1,4 +1,2 @@
 # polls
-nytimes presidential polls plot
-
-* requires `matplotlib`, `pandas` and `statsmodels`
+[nytimes presidential polls](https://www.nytimes.com/interactive/polls/donald-trump-approval-rating-polls.html) plot
