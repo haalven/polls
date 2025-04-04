@@ -106,7 +106,7 @@ def main() -> int:
     # trend line
     plt.plot(df['date'], smoothed[:, 1], '-', label='Trend', color='navy', linewidth=25, alpha=0.1)
     # limits and zero line
-    ax.set(ylim=(-15, 15))
+    ax.set(ylim=(-20, 15))
     plt.axhline(0, color='black', linewidth=1)
 
     # autoformat dates
