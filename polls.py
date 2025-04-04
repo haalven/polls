@@ -4,13 +4,11 @@
 
 DEBUG_LEVEL = 1
 
-import sys, os.path, tomllib
-import urllib.request, urllib.parse
-import csv
-from datetime import datetime as dt
+import sys, os.path, tomllib, urllib.request, csv
 import pandas as pd
-from statsmodels.nonparametric.smoothers_lowess import lowess
+import statsmodels.api as sm
 import matplotlib.pyplot as plt
+from datetime import datetime as dt
 
 # xterm formatting
 def f(code): return '\x1B[' + str(code) + 'm'
@@ -37,7 +35,7 @@ def read_configuration(my_dir, my_name):
         return None
 
 # get URL
-def get_url(url): # returns string or None
+def get_url(url):
     try:
         with urllib.request.urlopen(url) as r:
             return r.read().decode('utf-8')
@@ -77,11 +75,9 @@ def main() -> int:
 
     # csv reader
     for row in csvreader:
-
         # check pollster
         if str(row[pollster_col]).strip() not in config['selected_pollsters']:
             continue
-
         # fill lists
         poll_dates.append(dt.strptime(row[date_col], '%m/%d/%y'))
         poll_yes.append(float(row[yes_col]))
@@ -97,28 +93,27 @@ def main() -> int:
     df = df.sort_values('date')
 
     # LOWESS smoothing
-    smoothed = lowess(df['margin'], df['date'], frac=0.5)
+    smoothed = sm.nonparametric.lowess(df['margin'], df['date'], frac=1)
 
     # setup matplotlib
     fig, ax = plt.subplots()
-
     # title & footnote
-    plt.title('Presidential Approval Polls: Margin')
-    fig.text(0.01, 0.01, 'pollsters meet certain criteria for reliability according to NYT', fontsize=8, color='gray')
+    plt.title('Trump Approval minus Disapproval (%)')
+    fig.text(0.01, 0.01, 'source: https://www.nytimes.com/interactive/polls/donald-trump-approval-rating-polls.html', fontsize=7, color='gray')
 
     # margin scatter
-    ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', color='#1f77b4', alpha=0.5)
-
-    # trendline
-    plt.plot(df['date'], smoothed[:, 1], '-', label='Trend', color='#1f77b4', linewidth=20, alpha=0.3)
-
+    ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', s=66, color='navy', alpha=0.5)
+    # trend line
+    plt.plot(df['date'], smoothed[:, 1], '-', label='Trend', color='navy', linewidth=25, alpha=0.1)
     # limits and zero line
-    ax.set(ylim=(-20, 20))
+    ax.set(ylim=(-15, 15))
     plt.axhline(0, color='black', linewidth=1)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
 
+    # scale up
+    plt.rcParams['savefig.dpi'] = 300
     # show plot
     plt.show()
 
