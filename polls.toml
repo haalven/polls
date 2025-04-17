@@ -1,6 +1,9 @@
+nyturl  = "https://www.nytimes.com/interactive/polls/donald-trump-approval-rating-polls.html"
+
 csvurl  = "https://www.nytimes.com/newsgraphics/polls/approval/president.csv"
 
 selected_pollsters = ['American Research Group',
+                      'AP-NORC',
                       'AtlasIntel',
                       'Beacon Research/Shaw & Company Research',
                       'CNN/SSRS',
