@@ -1,5 +1,5 @@
 # polls
-plot of [the nytimes presidential polls](https://www.nytimes.com/interactive/polls/donald-trump-approval-rating-polls.html)
+plot of [the new NY Times presidential polls](https://www.nytimes.com/interactive/polls/donald-trump-approval-rating-polls.html)
 
 result:
 
