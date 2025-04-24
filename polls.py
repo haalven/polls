@@ -51,9 +51,6 @@ def main() -> int:
 
     # load configuration file
     config = read_configuration(my_dir, my_name)
-    if DEBUG_LEVEL > 0:
-        print('nyturl:', config['nyturl'])
-        print('csvurl:', config['csvurl'])
 
     # download csv file
     csvdata = get_url(config['csvurl'])
@@ -72,19 +69,28 @@ def main() -> int:
     # find columns
     date_col = header.index('end_date')
     pollster_col = header.index('pollster')
+    person_col = header.index('politician')
     yes_col = header.index('yes')
     no_col = header.index('no')
 
     # csv reader
     for row in csvreader:
+        # check person
+        row_person = str(row[person_col]).strip()
+        if row_person != 'Donald Trump':
+            continue
         # check pollster
+        row_pollster = str(row[pollster_col]).strip()
         if config['selected_only']:
-            if str(row[pollster_col]).strip() not in config['selected_pollsters']:
+            if row_pollster not in config['selected_pollsters']:
                 continue
         # fill lists
-        poll_dates.append(dt.strptime(row[date_col], '%m/%d/%y'))
-        poll_yes.append(float(row[yes_col]))
-        poll_no.append(float(row[no_col]))
+        row_date = dt.strptime(row[date_col], '%m/%d/%y')
+        poll_dates.append(row_date)
+        row_yes = float(row[yes_col])
+        poll_yes.append(row_yes)
+        row_no = float(row[no_col])
+        poll_no.append(row_no)
 
     # calculate margins
     poll_margin = [poll_yes[i] - poll_no[i] for i in range(len(poll_yes))]
@@ -94,11 +100,11 @@ def main() -> int:
 
     # sort by date
     df = df.sort_values('date')
+    print(df)
 
     # LOWESS smoothing
-    lowess = sm.nonparametric.lowess(df['margin'], df['date'], frac=.7)
+    lowess = sm.nonparametric.lowess(df['margin'], df['date'], frac=.66)
     smoothed = lowess[:, 1]
-    print('regression: ', smoothed)
 
     # setup matplotlib
     fig, ax = plt.subplots()
@@ -106,13 +112,14 @@ def main() -> int:
     plt.title('Trump Approval minus Disapproval (%)')
     fig.text(0.01, 0.01, 'source: ' + config['nyturl'], fontsize=7, color='gray')
 
+    # limits and zero line
+    ax.set(ylim=(-30, 20))
+    plt.axhline(0, color='black', linewidth=1)
+
     # margin scatter
-    ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', s=50, color='gray', alpha=0.33)
+    ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', s=33, color='gray', alpha=0.33)
     # trend line
     plt.plot(df['date'], smoothed, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
-    # limits and zero line
-    ax.set(ylim=(-20, 15))
-    plt.axhline(0, color='black', linewidth=1)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
