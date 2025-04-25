@@ -104,7 +104,7 @@ def main() -> int:
 
     # LOWESS smoothing
     lowess = sm.nonparametric.lowess(df['margin'], df['date'], frac=.66)
-    smoothed = lowess[:, 1]
+    trend = lowess[:, 1]
 
     # setup matplotlib
     fig, ax = plt.subplots()
@@ -119,7 +119,7 @@ def main() -> int:
     # margin scatter
     ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', s=33, color='gray', alpha=0.33)
     # trend line
-    plt.plot(df['date'], smoothed, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
+    plt.plot(df['date'], trend, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
