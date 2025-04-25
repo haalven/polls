@@ -4,7 +4,7 @@
 
 DEBUG_LEVEL = 1
 
-import sys, os.path, tomllib, urllib.request, csv
+import argparse, sys, os.path, tomllib, urllib.request, csv
 import pandas as pd
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
@@ -34,6 +34,15 @@ def read_configuration(my_dir, my_name):
         warn('error reading toml: ' + c_path)
         return None
 
+# parse arguments
+def get_arguments(my_name):
+    parser = argparse.ArgumentParser(prog=my_name)
+    parser.add_argument('-a', '--all',
+                        action='store_true',
+                        required=False,
+                        help='use all pollsters')
+    return parser.parse_args()
+
 # get URL
 def get_url(url):
     try:
@@ -51,6 +60,9 @@ def main() -> int:
 
     # load configuration file
     config = read_configuration(my_dir, my_name)
+
+    # parse arguments
+    arguments = get_arguments(my_name)
 
     # download csv file
     csvdata = get_url(config['csvurl'])
@@ -81,7 +93,7 @@ def main() -> int:
             continue
         # check pollster
         row_pollster = str(row[pollster_col]).strip()
-        if config['selected_only']:
+        if config['selected_only'] and not arguments.all:
             if row_pollster not in config['selected_pollsters']:
                 continue
         # fill lists
