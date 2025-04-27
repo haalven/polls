@@ -59,16 +59,13 @@ def main() -> int:
     try:
         df = pd.read_csv(config['csvurl'])
     except Exception as e:
-        return 'error: csv download failed'
+        return 'error: csv download failed: ' + str(e)
 
-    # selected columns only:
+    # select columns
     polldata = df[['end_date', 'poll_id', 'pollster', 'politician', 'yes', 'no']]
     polldata = polldata.copy()
 
-    # dates
-    polldata['dt_date'] = pd.to_datetime(polldata['end_date'], format='%m/%d/%y')
-
-    # filter for Trump
+    # filter for politician
     polldata = polldata[polldata['politician'] == 'Donald Trump']
 
     # filter for selected pollsters
@@ -86,11 +83,14 @@ def main() -> int:
     # calculate margins
     polldata['margin'] = polldata['yes'] - polldata['no']
 
+    # add dt-dates
+    polldata['dt_date'] = pd.to_datetime(polldata['end_date'], format='%m/%d/%y')
     # sort by date
     polldata = polldata.sort_values('dt_date')
 
     # print data
-    print(polldata[['dt_date', 'pollster', 'margin']])
+    print(f(1) + 'lastest polls:' + f(0))
+    print(polldata[['dt_date', 'pollster', 'margin']].tail(15))
 
     # LOWESS smoothing
     lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.67)
