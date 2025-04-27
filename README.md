@@ -3,4 +3,4 @@ plot of [the new NY Times presidential polls](https://www.nytimes.com/interactiv
 
 result:
 
-![example](Figure.png)
+![example](Figure_1.png)
