@@ -15,3 +15,8 @@ see [polls.toml](https://github.com/haalven/polls/blob/main/polls.toml)
 ![example](result.png)
 
 ![example](result2.png)
+
+## pollsters
+* [AP - NORC](https://apnorc.org/)
+* [NYT / Siena College](https://scri.siena.edu)
+  
