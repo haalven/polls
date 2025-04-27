@@ -99,7 +99,7 @@ def main() -> int:
     # setup matplotlib
     fig, ax = plt.subplots(figsize=(6, 6))
     # title & footnote
-    plt.title('Trump Approval minus Disapproval (%)')
+    plt.title('Trump 2nd Term Polls: Margin (%)')
     fig.text(0.01, 0.01, 'source: ' + config['nyturl'], fontsize=7, color='gray')
 
     # y-limits and horizontal lines
