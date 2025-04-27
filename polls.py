@@ -118,7 +118,7 @@ def main() -> int:
     # margin scatter
     ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=33, color='gray', alpha=0.33)
     # trend line
-    plt.plot(polldata['dt_date'], trend, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
+    plt.plot(polldata['dt_date'], trend, '-', label='Trend', color='#007FFF', linewidth=2.5, alpha=0.9)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
