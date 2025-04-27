@@ -120,7 +120,8 @@ def main() -> int:
     # scale up
     plt.rcParams['savefig.dpi'] = 300
     # show plot
-    plt.show()
+    plt.show(block=False)
+    _ = input('press any key to close plot...')
 
     return 0
 
