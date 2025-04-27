@@ -98,7 +98,7 @@ def main() -> int:
     print(polldata[['dt_date', 'pollster', 'margin']].tail(15))
 
     # LOWESS regression
-    lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.67)
+    lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.5)
     trend = lowess[:, 1]
     print(f(1) + 'latest regression:' + f(0))
     print(trend[-1])
