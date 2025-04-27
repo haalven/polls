@@ -16,7 +16,7 @@ see [polls.toml](https://github.com/haalven/polls/blob/main/polls.toml)
 
 ![example](result2.png)
 
-## pollsters
+## selected pollsters
 
 * [American Research Group](http://www.americanresearchgroup.com/)
 * [AP - NORC](https://apnorc.org/)
