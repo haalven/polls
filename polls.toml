@@ -16,6 +16,7 @@ selected_pollsters = ['American Research Group',
                       'Marquette Law School',
                       'Public Opinion Strategies',
                       'Pew Research Center',
-                      'Quinnipiac University']
+                      'Quinnipiac University',
+                      'The New York Times/Siena College']
 
 selected_only = true
