@@ -106,9 +106,8 @@ def main() -> int:
     # y-limits and horizontal lines
     ax.set(ylim=(-30, 20))
     plt.axhline(0, color='black', linewidth=1)
-    plt.axhline(10, color='lightgrey', linewidth=1)
-    plt.axhline(-10, color='lightgrey', linewidth=1)
-    plt.axhline(-20, color='lightgrey', linewidth=1)
+    for y in (20, 10, -10, -20):
+        plt.axhline(y, color='lightgrey', linewidth=1)
 
     # margin scatter
     ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=33, color='gray', alpha=0.33)
@@ -121,8 +120,7 @@ def main() -> int:
     # scale up
     plt.rcParams['savefig.dpi'] = 300
     # show plot
-    plt.show(block=False)
-    _ = input('enter to close plot…')
+    plt.show()
 
     return 0
 
