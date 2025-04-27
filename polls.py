@@ -70,8 +70,12 @@ def main() -> int:
     polldata = polldata[polldata['politician'] == 'Donald Trump']
 
     # filter for selected pollsters
+    print(f(1) + 'data set:' + f(0))
     if config['selected_only'] and not arguments.all:
+        print(' selected quality pollsters')
         polldata = polldata[polldata['pollster'].isin(config['selected_pollsters'])]
+    else:
+        print(' all pollsters (bad quality)')
 
     # remove duplicates
     poll_ids = []
@@ -96,6 +100,8 @@ def main() -> int:
     # LOWESS regression
     lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.67)
     trend = lowess[:, 1]
+    print(f(1) + 'latest regression:' + f(0))
+    print(trend[-1])
 
     # setup matplotlib
     fig, ax = plt.subplots(figsize=(6, 6))
