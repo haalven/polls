@@ -6,4 +6,4 @@ result:
 
 ![example](result.png)
 
-![example](fig.png)
+![example](result2.png)
