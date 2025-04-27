@@ -18,7 +18,7 @@ see [polls.toml](https://github.com/haalven/polls/blob/main/polls.toml)
 
 ## selected pollsters
 
-* [American Research Group](http://www.americanresearchgroup.com/)
+* [American Research Group](https://en.wikipedia.org/wiki/American_Research_Group)
 * [AP - NORC](https://apnorc.org/)
 * [AtlasIntel](https://www.atlasintel.org/)
 * [Beacon Research / Shaw & Company Research](https://beaconresearch.com/)
