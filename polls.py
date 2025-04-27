@@ -59,8 +59,8 @@ def main() -> int:
     try:
         df = pd.read_csv(config['csvurl'])
     except Exception as e:
-        warn('error reading csv-data from: ' + config['csvurl'] + ' failed: ' + str(e))
-        return 'error reading csv-data'
+        warn('error reading csv data from: ' + config['csvurl'] + ' failed: ' + str(e))
+        return 'error reading csv data'
 
     # select columns
     polldata = df[['end_date', 'poll_id', 'pollster', 'politician', 'yes', 'no']]
