@@ -4,11 +4,10 @@
 
 DEBUG_LEVEL = 1
 
-import argparse, sys, os.path, tomllib, urllib.request, csv
+import argparse, sys, os.path, tomllib
 import pandas as pd
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-from datetime import datetime as dt
 
 # xterm formatting
 def f(code): return '\x1B[' + str(code) + 'm'
@@ -43,14 +42,6 @@ def get_arguments(my_name):
                         help='use all pollsters')
     return parser.parse_args()
 
-# get URL
-def get_url(url):
-    try:
-        with urllib.request.urlopen(url) as r:
-            return r.read().decode('utf-8')
-    except Exception as e:
-        warn('urlopen error: ' + str(e))
-        return None
 
 def main() -> int:
     # my path
@@ -64,58 +55,45 @@ def main() -> int:
     # parse arguments
     arguments = get_arguments(my_name)
 
-    # download csv file
-    csvdata = get_url(config['csvurl'])
-    if not csvdata: return 'error: csv download failed'
+    # read csv file (pandas)
+    try:
+        df = pd.read_csv(config['csvurl'])
+    except Exception as e:
+        return 'error: csv download failed'
 
-    #read csv file
-    csvreader = csv.reader(csvdata.splitlines(), delimiter=',')
+    # selected columns only:
+    polldata = df[['end_date', 'poll_id', 'pollster', 'politician', 'yes', 'no']]
+    polldata = polldata.copy()
 
-    # header
-    header = next(csvreader)
+    # dates
+    polldata['dt_date'] = pd.to_datetime(polldata['end_date'], format='%m/%d/%y')
 
-    # prepare lists
-    poll_dates = []
-    poll_yes, poll_no = [], []
+    # filter for Trump
+    polldata = polldata[polldata['politician'] == 'Donald Trump']
 
-    # find columns
-    date_col = header.index('end_date')
-    pollster_col = header.index('pollster')
-    person_col = header.index('politician')
-    yes_col = header.index('yes')
-    no_col = header.index('no')
+    # filter for selected pollsters
+    if config['selected_only'] and not arguments.all:
+        polldata = polldata[polldata['pollster'].isin(config['selected_pollsters'])]
 
-    # csv reader
-    for row in csvreader:
-        # check person
-        row_person = str(row[person_col]).strip()
-        if row_person != 'Donald Trump':
-            continue
-        # check pollster
-        row_pollster = str(row[pollster_col]).strip()
-        if config['selected_only'] and not arguments.all:
-            if row_pollster not in config['selected_pollsters']:
-                continue
-        # fill lists
-        row_date = dt.strptime(row[date_col], '%m/%d/%y')
-        poll_dates.append(row_date)
-        row_yes = float(row[yes_col])
-        poll_yes.append(row_yes)
-        row_no = float(row[no_col])
-        poll_no.append(row_no)
+    # remove duplicates
+    poll_ids = []
+    for i, row in polldata.iterrows():
+        poll_id = row['poll_id']
+        if poll_id in poll_ids:
+            polldata.drop(i, inplace=True)
+        poll_ids.append(poll_id)
 
     # calculate margins
-    poll_margin = [poll_yes[i] - poll_no[i] for i in range(len(poll_yes))]
-
-    # move to pandas DataFrame
-    df = pd.DataFrame({'date': pd.to_datetime(poll_dates), 'margin': poll_margin})
+    polldata['margin'] = polldata['yes'] - polldata['no']
 
     # sort by date
-    df = df.sort_values('date')
-    print(df)
+    polldata = polldata.sort_values('dt_date')
+
+    # print data
+    print(polldata[['dt_date', 'pollster', 'margin']])
 
     # LOWESS smoothing
-    lowess = sm.nonparametric.lowess(df['margin'], df['date'], frac=.66)
+    lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.67)
     trend = lowess[:, 1]
 
     # setup matplotlib
@@ -129,9 +107,9 @@ def main() -> int:
     plt.axhline(0, color='black', linewidth=1)
 
     # margin scatter
-    ax.scatter(poll_dates, poll_margin, label='Margin', marker='D', s=33, color='gray', alpha=0.33)
+    ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=33, color='gray', alpha=0.33)
     # trend line
-    plt.plot(df['date'], trend, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
+    plt.plot(polldata['dt_date'], trend, '-', label='Trend', color='deepskyblue', linewidth=2.5, alpha=0.9)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
