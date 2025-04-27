@@ -59,7 +59,8 @@ def main() -> int:
     try:
         df = pd.read_csv(config['csvurl'])
     except Exception as e:
-        return 'error: csv download failed: ' + str(e)
+        warn('error reading csv-data from: ' + config['csvurl'] + ' failed: ' + str(e))
+        return 'error reading csv-data'
 
     # select columns
     polldata = df[['end_date', 'poll_id', 'pollster', 'politician', 'yes', 'no']]
@@ -121,7 +122,7 @@ def main() -> int:
     plt.rcParams['savefig.dpi'] = 300
     # show plot
     plt.show(block=False)
-    _ = input('press any key to close plot...')
+    _ = input('enter to close plot…')
 
     return 0
 
