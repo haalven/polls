@@ -92,19 +92,22 @@ def main() -> int:
     print(f(1) + 'lastest polls:' + f(0))
     print(polldata[['dt_date', 'pollster', 'margin']].tail(15))
 
-    # LOWESS smoothing
+    # LOWESS regression
     lowess = sm.nonparametric.lowess(polldata['margin'], polldata['dt_date'], frac=.67)
     trend = lowess[:, 1]
 
     # setup matplotlib
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 6))
     # title & footnote
     plt.title('Trump Approval minus Disapproval (%)')
     fig.text(0.01, 0.01, 'source: ' + config['nyturl'], fontsize=7, color='gray')
 
-    # limits and zero line
+    # y-limits and horizontal lines
     ax.set(ylim=(-30, 20))
     plt.axhline(0, color='black', linewidth=1)
+    plt.axhline(10, color='lightgrey', linewidth=1)
+    plt.axhline(-10, color='lightgrey', linewidth=1)
+    plt.axhline(-20, color='lightgrey', linewidth=1)
 
     # margin scatter
     ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=33, color='gray', alpha=0.33)
