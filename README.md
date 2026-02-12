@@ -12,7 +12,7 @@ see [polls.toml](https://github.com/haalven/polls/blob/main/polls.toml)
 
 ## result (example)
 
-![example](result2.png)
+![example](Figure_1.png)
 
 ## selected pollsters (A-Z)
 
