@@ -7,6 +7,6 @@ selected_pollsters = ['CNN/SSRS',
                       'Ipsos',
                       'Pew Research Center',
                       'Quinnipiac University',
-                      'The New York Times/Siena College']
+                      'The New York Times/Siena University']
 
 selected_only = true
