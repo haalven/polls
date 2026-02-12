@@ -150,7 +150,7 @@ def main() -> int:
         'Ipsos': '#4DAF4A',
         'Pew Research Center': '#984EA3',
         'Quinnipiac University': '#FF7F00',
-        'The New York Times/Siena College': '#A65628',
+        'The New York Times/Siena University': '#A65628',
     }
     for pollster, color in pollster_colors.items():
         pollster_data = polldata[polldata['pollster'] == pollster]
