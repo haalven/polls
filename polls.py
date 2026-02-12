@@ -65,7 +65,7 @@ def main() -> int:
         df = pd.read_csv(config['csvurl'])
     except Exception as e:
         warn('error reading csv data from: ' + config['csvurl'] + ' failed: ' + str(e))
-        return 'error reading csv data'
+        return 1
     # save csv file
     today = dt.now().date().isoformat()
     data_file = os.path.splitext(my_name)[0] + '-original-' + today + '.csv'
@@ -143,10 +143,32 @@ def main() -> int:
     for y in (-10, -20, -30):
         plt.axhline(y, color='lightgrey', linewidth=1)
 
+    # pollster lines
+    pollster_colors = {
+        'CNN/SSRS': '#E41A1C',
+        'Gallup': '#377EB8',
+        'Ipsos': '#4DAF4A',
+        'Pew Research Center': '#984EA3',
+        'Quinnipiac University': '#FF7F00',
+        'The New York Times/Siena College': '#A65628',
+    }
+    for pollster, color in pollster_colors.items():
+        pollster_data = polldata[polldata['pollster'] == pollster]
+        if not pollster_data.empty:
+            ax.plot(
+                pollster_data['dt_date'],
+                pollster_data['margin'],
+                '-',
+                color=color,
+                linewidth=1.2,
+                alpha=0.8,
+            )
+
     # margin scatter
-    ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=33, color='gray', alpha=0.33)
+    ax.scatter(polldata['dt_date'], polldata['margin'], label='Margin', marker='D', s=25, color='gray', alpha=0.33)
+
     # trend line
-    plt.plot(polldata['dt_date'], trend, '-', label='Trend', color='#007FFF', linewidth=2.5, alpha=0.9)
+    plt.plot(polldata['dt_date'], trend, '-', label='Trend', color='#000000', linewidth=4, alpha=0.9)
 
     # autoformat dates
     plt.gcf().autofmt_xdate()
